@@ -126,6 +126,7 @@ const Task = () => {
   }, [selected, taskList, priority, sort]);
 
   const handleSearchChange = (e) => {
+    e.preventDefault();
     setSearch(e.target.value.trim());
     startTransition(() => {
       setFilteredList((prevFilteredList) => {
@@ -138,10 +139,12 @@ const Task = () => {
         }
         const list = prevFilteredList.filter((task) => {
           return (
-            task.title.toLowerCase().includes(lowerCaseSearch) ||
-            task.description.toLowerCase().includes(lowerCaseSearch)
+            (task.title.toLowerCase().includes(lowerCaseSearch) ||
+              task.description.toLowerCase().includes(lowerCaseSearch))
+            // && task.priority === selected
           );
         });
+
         return [...list];
       });
     });
@@ -195,7 +198,7 @@ const Task = () => {
 
   return (
     <Box maxWidth={{ base: "100%", md: "60%" }} margin={"25px auto"} p={4} bg={bgColor} borderRadius="md" boxShadow="md">
-      
+
       <Suspense fallback={<CircularProgress isIndeterminate color="teal.300" />}>
         <TaskModal
           isOpen={isOpen}
